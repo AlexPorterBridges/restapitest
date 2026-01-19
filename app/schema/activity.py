@@ -12,6 +12,11 @@ class ActivityResponse(BaseResponse):
     parent_id: uuid.UUID | None = None
 
 
+class ActivityListResponse(BaseModel):
+    items: list[ActivityResponse]
+    total: int
+
+
 class ActivityCreateRequest(BaseModel):
     name: str
     parent_id: uuid.UUID | None = None

@@ -34,7 +34,7 @@ class Organization(TimestampMixin):
     )
 
     status: Mapped[OrganizationStatus] = mapped_column(
-        Enum(OrganizationStatus, name="business_status"),
+        Enum(OrganizationStatus, name="organization_status"),
         nullable=False,
         default=OrganizationStatus.ACTIVE,
     )

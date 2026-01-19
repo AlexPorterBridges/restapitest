@@ -16,3 +16,9 @@ class ActivityRepository(BaseRepository):
             select(Activity).where(Activity.id == id)
         )
         return result.scalar_one_or_none()
+
+    async def list_all(self) -> list[Activity]:
+        result = await self.session.execute(
+            select(Activity)
+        )
+        return list(result.scalars().all())

@@ -131,3 +131,14 @@ async def delete_organization(
 ) -> None:
     await service.delete(data)
     return
+
+
+@router.get(
+    "/",
+    response_model=OrganizationListResponse,
+    summary="Получить все организации",
+)
+async def list_all(
+    service: OrganizationService = Depends(get_organization_service),
+) -> OrganizationListResponse:
+    return await service.list_all()

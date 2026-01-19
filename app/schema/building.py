@@ -12,6 +12,11 @@ class BuildingResponse(BaseResponse):
     longitude: float
 
 
+class BuildingListResponse(BaseModel):
+    items: list[BuildingResponse]
+    total: int
+
+
 class BuildingCreateRequest(BaseModel):
     address: str
     latitude: float

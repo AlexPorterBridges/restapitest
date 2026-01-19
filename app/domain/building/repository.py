@@ -22,3 +22,9 @@ class BuildingRepository(BaseRepository):
             select(Building).where(Building.address == address)
         )
         return result.scalar_one_or_none()
+
+    async def list_all(self) -> list[Building]:
+        result = await self.session.execute(
+            select(Building)
+        )
+        return list(result.scalars().all())

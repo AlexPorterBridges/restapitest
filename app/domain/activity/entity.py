@@ -45,7 +45,7 @@ class Activity(TimestampMixin):
     level: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=1)
 
     status: Mapped[ActivityStatus] = mapped_column(
-        Enum(ActivityStatus, name="business_status"),
+        Enum(ActivityStatus, name="activity_status"),
         nullable=False,
         default=ActivityStatus.ACTIVE,
     )

@@ -170,3 +170,11 @@ class OrganizationService:
         organization.status = OrganizationStatus.SUSPENDED
 
         _ = await self.organization_repository.update(organization)
+
+    async def list_all(self) -> "OrganizationListResponse":
+        organizations = await self.organization_repository.list_all()
+
+        if not organizations:
+            raise NotFoundError("Organizations")
+
+        return map_organization_list_to_dto(organizations=organizations)

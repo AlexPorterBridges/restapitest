@@ -2,7 +2,8 @@ from typing import TYPE_CHECKING
 
 from app.domain.activity import Activity, ActivityRepository, ActivityStatus
 from app.factory.repository import (get_activity_repository)
-from app.service.activity.mapper import map_activity_to_dto
+from app.schema.activity import ActivityListResponse
+from app.service.activity.mapper import map_activity_list_to_dto, map_activity_to_dto
 from app.utils.exception_handler import NotFoundError, UnprocessableEntityError
 
 
@@ -82,3 +83,11 @@ class ActivityService:
         activity.status = ActivityStatus.SUSPENDED
 
         _ = self.activity_repository.update(activity)
+
+    async def list_all(self) -> "ActivityListResponse":
+        activities = await self.activity_repository.list_all()
+
+        if not activities:
+            raise NotFoundError("Activities")
+
+        return map_activity_list_to_dto(activities=activities)

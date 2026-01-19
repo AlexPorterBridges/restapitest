@@ -6,7 +6,7 @@ from app.factory.service import get_activity_service
 from app.schema.activity import (
     ActivityCreateRequest,
     ActivityDeleteRequest,
-    ActivityResponse,
+    ActivityListResponse, ActivityResponse,
     ActivityUpdateRequest,
 )
 from app.service.activity import ActivityService
@@ -21,7 +21,7 @@ router = APIRouter(
 @router.get(
     "/{id}",
     response_model=ActivityResponse,
-    summary="Получить организацию по ID",
+    summary="Получить деятельность по ID",
 )
 async def get_activity(
     id: uuid.UUID,
@@ -66,3 +66,14 @@ async def delete_activity(
 ) -> None:
     await service.delete(data)
     return
+
+
+@router.get(
+    "/",
+    response_model=ActivityListResponse,
+    summary="Получить все деятельности",
+)
+async def list_all(
+    service: ActivityService = Depends(get_activity_service),
+) -> ActivityListResponse:
+    return await service.list_all()

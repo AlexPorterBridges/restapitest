@@ -26,7 +26,7 @@ class OrganizationListResponse(BaseModel):
 
 
 class OrganizationSearchByNameRequest(BaseModel):
-    name: str = Annotated[str, StringConstraints(min_length=1)]
+    name: Annotated[str, StringConstraints(min_length=1)]
 
 
 class OrganizationByBuildingRequest(BaseModel):

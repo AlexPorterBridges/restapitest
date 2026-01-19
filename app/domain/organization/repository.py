@@ -30,7 +30,7 @@ class OrganizationRepository(BaseRepository):
         return result.scalar_one_or_none()
 
     async def list_by_name(self, name: str) -> list[Organization]:
-        stmt = (
+        result = await self.session.execute(
             select(Organization)
             .where(Organization.name.ilike(f"%{name}%"))
             .options(
@@ -39,8 +39,6 @@ class OrganizationRepository(BaseRepository):
                 selectinload(Organization.activities),
             )
         )
-
-        result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
     async def list_by_building(self, building_id: "uuid.UUID") -> list[Organization]:
@@ -95,7 +93,7 @@ class OrganizationRepository(BaseRepository):
             + func.sin(lat1) * func.sin(lat2)
         )
 
-        stmt = (
+        result = await self.session.execute(
             select(Organization)
             .join(Organization.building)
             .where(
@@ -110,8 +108,6 @@ class OrganizationRepository(BaseRepository):
                 selectinload(Organization.activities),
             )
         )
-
-        result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
     async def _get_activity_subtree_ids(self, root_activity_id: "uuid.UUID") -> list["uuid.UUID"]:
@@ -134,7 +130,7 @@ class OrganizationRepository(BaseRepository):
     async def list_by_activity_tree(self, activity_id: "uuid.UUID") -> list[Organization]:
         activity_ids = await self._get_activity_subtree_ids(activity_id)
 
-        stmt = (
+        result = await self.session.execute(
             select(Organization)
             .join(OrganizationActivity)
             .where(
@@ -150,6 +146,14 @@ class OrganizationRepository(BaseRepository):
                 selectinload(Organization.phones),
             )
         )
+        return list(result.scalars().all())
 
-        result = await self.session.execute(stmt)
+    async def list_all(self) -> list[Organization]:
+        result = await self.session.execute(
+            select(Organization).options(
+                selectinload(Organization.activities),
+                selectinload(Organization.building),
+                selectinload(Organization.phones),
+            )
+        )
         return list(result.scalars().all())

@@ -6,7 +6,7 @@ from app.factory.service import get_building_service
 from app.schema.building import (
     BuildingCreateRequest,
     BuildingDeleteRequest,
-    BuildingResponse,
+    BuildingListResponse, BuildingResponse,
     BuildingUpdateRequest,
 )
 from app.service.building import BuildingService
@@ -66,3 +66,14 @@ async def delete_building(
 ) -> None:
     await service.delete(data)
     return
+
+
+@router.get(
+    "/",
+    response_model=BuildingListResponse,
+    summary="Получить все здания",
+)
+async def list_all(
+    service: BuildingService = Depends(get_building_service),
+) -> BuildingListResponse:
+    return await service.list_all()

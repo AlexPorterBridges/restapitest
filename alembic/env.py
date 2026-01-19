@@ -12,6 +12,8 @@ from app.domain.activity import Activity, ActivityStatus, OrganizationActivity
 from app.domain.building import Building, BuildingStatus
 # noinspection PyUnresolvedReferences
 from app.domain.organization import Organization, OrganizationStatus
+# noinspection PyUnresolvedReferences
+from app.domain.phone import Phone
 
 
 config = context.config
