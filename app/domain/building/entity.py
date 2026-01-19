@@ -1,9 +1,10 @@
 import uuid
 
-from sqlalchemy import Numeric, Text, UUID
+from sqlalchemy import Enum, Numeric, Text, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import TimestampMixin
+from .enum import BuildingStatus
 
 
 class Building(TimestampMixin):
@@ -28,3 +29,9 @@ class Building(TimestampMixin):
     )
 
     organizations = relationship("Organization", back_populates="buildings")
+
+    status: Mapped[BuildingStatus] = mapped_column(
+        Enum(BuildingStatus, name="business_status"),
+        nullable=False,
+        default=BuildingStatus.ACTIVE,
+    )

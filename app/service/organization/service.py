@@ -3,12 +3,11 @@ from typing import TYPE_CHECKING
 from app.domain.activity import ActivityRepository
 from app.domain.building import BuildingRepository
 from app.domain.organization import Organization, OrganizationRepository, OrganizationStatus
-from app.domain.phone import Phone, PhoneRepository
+from app.domain.phone import Phone
 from app.factory.repository import (
     get_activity_repository,
     get_building_repository,
     get_organization_repository,
-    get_phone_repository,
 )
 from app.service.organization.mapper import map_organization_list_to_dto, map_organization_to_dto
 from app.utils.exception_handler import NotFoundError
@@ -34,14 +33,12 @@ class OrganizationService:
         activity_repository: ActivityRepository = get_activity_repository(),
         building_repository: BuildingRepository = get_building_repository(),
         organization_repository: OrganizationRepository = get_organization_repository(),
-        phone_repository: PhoneRepository = get_phone_repository(),
     ):
         self.activity_repository = activity_repository
         self.building_repository = building_repository
         self.organization_repository = organization_repository
-        self.phone_repository = phone_repository
 
-    async def get_detail(self, id: "uuid.UUID") -> "OrganizationResponse":
+    async def get(self, id: "uuid.UUID") -> "OrganizationResponse":
         organization = await self.organization_repository.get_detail(id)
 
         if not organization:
@@ -105,7 +102,7 @@ class OrganizationService:
 
         return map_organization_list_to_dto(organizations=organizations)
 
-    async def create_organization(self, data: "OrganizationCreateRequest") -> "OrganizationResponse":
+    async def create(self, data: "OrganizationCreateRequest") -> "OrganizationResponse":
         building = await self.building_repository.get(data.building_id)
         if not building:
             raise NotFoundError("Building")
@@ -127,7 +124,7 @@ class OrganizationService:
         _ = await self.organization_repository.create(organization)
         return map_organization_to_dto(organization=organization)
 
-    async def update_organization(self, data: "OrganizationUpdateRequest") -> "OrganizationResponse":
+    async def update(self, data: "OrganizationUpdateRequest") -> "OrganizationResponse":
         organization = await self.organization_repository.get(data.id)
         if not organization:
             raise NotFoundError("Organization")
@@ -160,7 +157,7 @@ class OrganizationService:
         _ = await self.organization_repository.update(organization)
         return map_organization_to_dto(organization=organization)
 
-    async def delete_organization(
+    async def delete(
         self,
         data: "OrganizationDeleteRequest",
     ) -> "OrganizationResponse":

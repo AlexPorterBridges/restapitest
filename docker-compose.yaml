@@ -1,0 +1,29 @@
+services:
+  database:
+    image: postgres:16
+    container_name: database
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT_EXTERNAL}:${DB_PORT}"
+
+  backend:
+    build: .
+    container_name: backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - database
+    volumes:
+      - .:/backend
+    ports:
+      - "${BE_PORT_EXTERNAL}:${BE_PORT}"
+
+volumes:
+  db_data:

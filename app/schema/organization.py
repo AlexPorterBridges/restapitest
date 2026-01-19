@@ -23,6 +23,7 @@ class ActivityResponse(BaseResponse):
 
 
 class OrganizationResponse(BaseResponse):
+    id: uuid.UUID
     name: str
     building: BuildingResponse
     phone_numbers: list[PhoneResponse]
@@ -49,7 +50,7 @@ class OrganizationByActivityRequest(BaseModel):
 class OrganizationRadiusRequest(BaseModel):
     latitude: float
     longitude: float
-    radius_km: PositiveInt
+    radius: PositiveInt
 
 
 class OrganizationCreateRequest(BaseModel):

@@ -17,7 +17,7 @@ class Phone(TimestampMixin):
 
     organization_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("organization.id")
+        ForeignKey("organizations.id")
     )
 
     number: Mapped[str] = mapped_column(Text, nullable=False)

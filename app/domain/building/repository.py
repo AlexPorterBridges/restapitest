@@ -16,3 +16,9 @@ class BuildingRepository(BaseRepository):
             select(Building).where(Building.id == id)
         )
         return result.scalar_one_or_none()
+
+    async def get_by_addtess(self, address: str) -> Building | None:
+        result = await self.session.execute(
+            select(Building).where(Building.address == address)
+        )
+        return result.scalar_one_or_none()

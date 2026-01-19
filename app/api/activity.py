@@ -1,0 +1,67 @@
+import uuid
+
+from fastapi import APIRouter, Depends, status
+
+from app.factory.service import get_activity_service
+from app.schema.activity import (
+    ActivityCreateRequest,
+    ActivityDeleteRequest,
+    ActivityResponse,
+    ActivityUpdateRequest,
+)
+from app.service.activity import ActivityService
+
+
+router = APIRouter(
+    prefix="/activity",
+    tags=["Activity"],
+)
+
+
+@router.get(
+    "/{id}",
+    response_model=ActivityResponse,
+    summary="Получить организацию по ID",
+)
+async def get_activity(
+    id: uuid.UUID,
+    service: ActivityService = Depends(get_activity_service),
+):
+    return await service.get(id)
+
+
+@router.post(
+    "/create/",
+    response_model=ActivityResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Создать организацию",
+)
+async def create_activity(
+    data: ActivityCreateRequest,
+    service: ActivityService = Depends(get_activity_service),
+):
+    return await service.create(data)
+
+
+@router.post(
+    "/update/",
+    response_model=ActivityResponse,
+    summary="Редактировать организацию",
+)
+async def update_activity(
+    data: ActivityUpdateRequest,
+    service: ActivityService = Depends(get_activity_service),
+):
+    return await service.update(data)
+
+
+@router.post(
+    "/delete/",
+    response_model=ActivityResponse,
+    summary="Удалить организацию",
+)
+async def delete_activity(
+    data: ActivityDeleteRequest,
+    service: ActivityService = Depends(get_activity_service),
+):
+    return await service.delete(data)

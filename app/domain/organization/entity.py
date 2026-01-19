@@ -4,7 +4,7 @@ from sqlalchemy import Enum, ForeignKey, Text, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import TimestampMixin
-from app.domain.organization import OrganizationStatus
+from .enum import OrganizationStatus
 
 
 class Organization(TimestampMixin):
@@ -23,7 +23,7 @@ class Organization(TimestampMixin):
         ForeignKey("buildings.id")
     )
 
-    building = relationship(argunemt="Building", back_populates="organizations")
+    building = relationship(argument="Building", back_populates="organizations")
 
     phones = relationship(argument="Phone", cascade="all, delete-orphan")
 
