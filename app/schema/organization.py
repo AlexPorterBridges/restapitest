@@ -1,0 +1,71 @@
+import uuid
+from typing import Annotated
+
+from pydantic import BaseModel, PositiveInt, StringConstraints
+
+from app.schema.base import BaseResponse
+
+
+class BuildingResponse(BaseResponse):
+    address: str
+    latitude: float
+    longitude: float
+
+
+class PhoneResponse(BaseResponse):
+    number: str
+
+
+class ActivityResponse(BaseResponse):
+    name: str
+    level: int
+    parent_id: uuid.UUID | None = None
+
+
+class OrganizationResponse(BaseResponse):
+    name: str
+    building: BuildingResponse
+    phone_numbers: list[PhoneResponse]
+    activities: list[ActivityResponse]
+
+
+class OrganizationListResponse(BaseModel):
+    items: list[OrganizationResponse]
+    total: int
+
+
+class OrganizationSearchByNameRequest(BaseModel):
+    name: str = Annotated[str, StringConstraints(min_length=1)]
+
+
+class OrganizationByBuildingRequest(BaseModel):
+    building_id: uuid.UUID
+
+
+class OrganizationByActivityRequest(BaseModel):
+    activity_id: uuid.UUID
+
+
+class OrganizationRadiusRequest(BaseModel):
+    latitude: float
+    longitude: float
+    radius_km: PositiveInt
+
+
+class OrganizationCreateRequest(BaseModel):
+    name: str
+    building_id: uuid.UUID
+    phone_numbers: list[str]
+    activity_ids: list[uuid.UUID]
+
+
+class OrganizationUpdateRequest(BaseModel):
+    id: uuid.UUID
+    name: str | None = None
+    building_id: uuid.UUID | None = None
+    phone_numbers: list[str] | None = None
+    activity_ids: list[uuid.UUID] | None = None
+
+
+class OrganizationDeleteRequest(BaseModel):
+    id: uuid.UUID

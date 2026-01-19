@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import ForeignKey, Text, UUID
+from sqlalchemy import ForeignKey, SmallInteger, Text, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import TimestampMixin
@@ -34,6 +34,8 @@ class Activity(TimestampMixin):
         secondary="activity_organizations",
         back_populates="activities",
     )
+
+    level: Mapped[int] = mapped_column(SmallInteger, nullable=False)
 
 
 class OrganizationActivity(TimestampMixin):

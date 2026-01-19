@@ -7,6 +7,7 @@ from fastapi import FastAPI
 
 from app.database.bootstrap import drop_database, init_database
 from app.settings import app_settings
+from app.utils.exception_handler import register_exception_handlers
 
 
 @asynccontextmanager
@@ -18,6 +19,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, Any]:  # noqa
 
 
 app = FastAPI(lifespan=lifespan, title="MedianBonus")
+register_exception_handlers(app)
 
 routers = []
 for router in routers:

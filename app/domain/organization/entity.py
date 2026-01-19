@@ -1,9 +1,10 @@
 import uuid
 
-from sqlalchemy import ForeignKey, Text, UUID
+from sqlalchemy import Enum, ForeignKey, Text, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import TimestampMixin
+from app.domain.organization import OrganizationStatus
 
 
 class Organization(TimestampMixin):
@@ -30,4 +31,10 @@ class Organization(TimestampMixin):
         argument="Activity",
         secondary="organization_activities",
         back_populates="organizations",
+    )
+
+    status: Mapped[OrganizationStatus] = mapped_column(
+        Enum(OrganizationStatus, name="business_status"),
+        nullable=False,
+        default=OrganizationStatus.ACTIVE,
     )
