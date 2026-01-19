@@ -19,11 +19,11 @@
     ```shell
     alembic upgrade head
     ```
-5. При необходимости наполните базу данных тестовыми данными. Подставьте необходимые параметры из `.env` в команду ниже:
-   ```shell
-   psql postgresql://{login}:{password}@{host_external}:{port_external}/{name} -f infra/infra.sql
-   ```
-   так, при использовании переменных, указанных в `.env.example`, получится команда:
+5. При необходимости наполните базу данных тестовыми данными. При использовании переменных, указанных в `.env.example`, получится команда:
    ```shell
    psql postgresql://postgres:postgres@localhost:5433/postgres -f infra/infra.sql
+   ```
+6. Для доступа к Swagger перейдите по ссылке, которая, при использовании переменных, указанных в `.env.example`, выглядит так:
+   ```shell
+   http://0.0.0.0:8000/docs
    ```
