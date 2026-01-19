@@ -1,9 +1,10 @@
 import uuid
 
-from sqlalchemy import Enum, ForeignKey, Text, UUID
+from sqlalchemy import UUID, Enum, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import TimestampMixin
+
 from .enum import OrganizationStatus
 
 
@@ -18,10 +19,7 @@ class Organization(TimestampMixin):
 
     name: Mapped[str] = mapped_column(Text, nullable=False, index=True)
 
-    building_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("buildings.id")
-    )
+    building_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("buildings.id"))
 
     building = relationship(argument="Building", back_populates="organizations")
 

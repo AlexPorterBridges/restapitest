@@ -1,20 +1,19 @@
 import os
 from logging.config import fileConfig
 
-from alembic import context
 from dotenv import load_dotenv
 from sqlalchemy import pool
 
+from alembic import context
 from app.database.base import Base
-# noinspection PyUnresolvedReferences
-from app.domain.activity import Activity, ActivityStatus, OrganizationActivity
-# noinspection PyUnresolvedReferences
-from app.domain.building import Building, BuildingStatus
-# noinspection PyUnresolvedReferences
-from app.domain.organization import Organization, OrganizationStatus
-# noinspection PyUnresolvedReferences
-from app.domain.phone import Phone
 
+# noinspection PyUnresolvedReferences
+
+# noinspection PyUnresolvedReferences
+
+# noinspection PyUnresolvedReferences
+
+# noinspection PyUnresolvedReferences
 
 config = context.config
 fileConfig(config.config_file_name)
@@ -71,6 +70,5 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     import asyncio
-
 
     asyncio.run(run_migrations_online())

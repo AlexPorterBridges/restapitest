@@ -6,11 +6,11 @@ from app.factory.service import get_activity_service
 from app.schema.activity import (
     ActivityCreateRequest,
     ActivityDeleteRequest,
-    ActivityListResponse, ActivityResponse,
+    ActivityListResponse,
+    ActivityResponse,
     ActivityUpdateRequest,
 )
 from app.service.activity import ActivityService
-
 
 router = APIRouter(
     prefix="/activity",

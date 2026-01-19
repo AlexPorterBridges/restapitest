@@ -6,13 +6,14 @@ from app.domain.activity import ActivityRepository
 from app.domain.building import BuildingRepository
 from app.domain.organization import OrganizationRepository
 from app.service.organization import OrganizationService
+
+from ..service.activity import ActivityService
+from ..service.building import BuildingService
 from .repository import (
     get_activity_repository,
     get_building_repository,
     get_organization_repository,
 )
-from ..service.activity import ActivityService
-from ..service.building import BuildingService
 
 
 @lru_cache

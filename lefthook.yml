@@ -1,0 +1,28 @@
+pre-commit:
+  parallel: false
+  commands:
+    black:
+      run: ~/.local/bin/uv run black . && git add -u
+      stage_fixed: true
+      skip:
+        - merge
+        - rebase
+
+    ruff-format:
+      run: ~/.local/bin/uv run ruff format . && git add -u
+      stage_fixed: true
+      skip:
+        - merge
+        - rebase
+
+    ruff-check:
+      run: ~/.local/bin/uv run ruff check .
+      skip:
+        - merge
+        - rebase
+
+    mypy:
+      run: ~/.local/bin/uv run mypy .
+      skip:
+        - merge
+        - rebase

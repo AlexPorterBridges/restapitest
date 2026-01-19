@@ -8,7 +8,6 @@ from app.schema.organization import (
 from app.service.activity.mapper import map_activity_to_dto
 from app.service.building.mapper import map_building_to_dto
 
-
 if TYPE_CHECKING:
     from app.domain.organization import Organization
     from app.domain.phone import Phone

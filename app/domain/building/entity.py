@@ -1,9 +1,10 @@
 import uuid
 
-from sqlalchemy import Enum, Numeric, Text, UUID
+from sqlalchemy import UUID, Enum, Numeric, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import TimestampMixin
+
 from .enum import BuildingStatus
 
 

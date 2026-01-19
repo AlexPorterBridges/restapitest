@@ -6,11 +6,11 @@ from app.factory.service import get_building_service
 from app.schema.building import (
     BuildingCreateRequest,
     BuildingDeleteRequest,
-    BuildingListResponse, BuildingResponse,
+    BuildingListResponse,
+    BuildingResponse,
     BuildingUpdateRequest,
 )
 from app.service.building import BuildingService
-
 
 router = APIRouter(
     prefix="/building",

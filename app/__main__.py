@@ -5,7 +5,6 @@ from app.api import activity_router, building_router, organizations_router
 from app.settings import app_settings
 from app.utils.exception_handler import register_exception_handlers
 
-
 app = FastAPI(title="RestAPI Test Task")
 register_exception_handlers(app)
 

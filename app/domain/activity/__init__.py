@@ -1,5 +1,5 @@
 from .entity import Activity, OrganizationActivity
-from .repository import ActivityRepository
 from .enum import ActivityStatus
+from .repository import ActivityRepository
 
 __all__ = ["Activity", "OrganizationActivity", "ActivityRepository", "ActivityStatus"]

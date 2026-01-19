@@ -1,10 +1,6 @@
 from typing import TYPE_CHECKING
 
-from app.schema.activity import ActivityListResponse
-from app.schema.organization import (
-    ActivityResponse,
-)
-
+from app.schema.activity import ActivityListResponse, ActivityResponse
 
 if TYPE_CHECKING:
     from app.domain.activity import Activity

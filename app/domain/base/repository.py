@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.base import TimestampMixin
 
 if TYPE_CHECKING:
-    import uuid
+    pass
+
 
 class BaseRepository:
     def __init__(self, session: AsyncSession):

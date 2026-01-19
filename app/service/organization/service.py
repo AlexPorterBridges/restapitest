@@ -12,17 +12,18 @@ from app.factory.repository import (
 from app.service.organization.mapper import map_organization_list_to_dto, map_organization_to_dto
 from app.utils.exception_handler import NotFoundError
 
-
 if TYPE_CHECKING:
     import uuid
+
     from app.schema.organization import (
         OrganizationByActivityRequest,
         OrganizationByBuildingRequest,
-        OrganizationDeleteRequest, OrganizationListResponse,
+        OrganizationCreateRequest,
+        OrganizationDeleteRequest,
+        OrganizationListResponse,
+        OrganizationRadiusRequest,
         OrganizationResponse,
         OrganizationSearchByNameRequest,
-        OrganizationCreateRequest,
-        OrganizationRadiusRequest,
         OrganizationUpdateRequest,
     )
 
@@ -122,8 +123,11 @@ class OrganizationService:
         organization.activities = activities
 
         _ = await self.organization_repository.create(organization)
-        organization = await self.organization_repository.get(organization.id)
-        return map_organization_to_dto(organization=organization)
+        check = await self.organization_repository.get(organization.id)
+        if not check:
+            raise NotFoundError("Activity")
+
+        return map_organization_to_dto(organization=check)
 
     async def update(self, data: "OrganizationUpdateRequest") -> "OrganizationResponse":
         organization = await self.organization_repository.get(data.id)
@@ -140,9 +144,7 @@ class OrganizationService:
 
         if data.phone_numbers is not None:
             organization.phones.clear()
-            organization.phones.extend(
-                Phone(number=number) for number in data.phone_numbers
-            )
+            organization.phones.extend(Phone(number=number) for number in data.phone_numbers)
 
         if data.activity_ids is not None:
             activities = []
@@ -156,8 +158,11 @@ class OrganizationService:
             organization.activities.extend(activities)
 
         _ = await self.organization_repository.update(organization)
-        organization = await self.organization_repository.get(organization.id)
-        return map_organization_to_dto(organization=organization)
+        check = await self.organization_repository.get(organization.id)
+        if not check:
+            raise NotFoundError("Activity")
+
+        return map_organization_to_dto(organization=check)
 
     async def delete(
         self,

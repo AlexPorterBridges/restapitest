@@ -1,4 +1,3 @@
 from .service import ActivityService
 
-
-__all__ = ['ActivityService']
+__all__ = ["ActivityService"]

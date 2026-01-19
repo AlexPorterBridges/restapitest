@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 
 from app.schema.building import BuildingListResponse, BuildingResponse
 
-
 if TYPE_CHECKING:
     from app.domain.building import Building
 

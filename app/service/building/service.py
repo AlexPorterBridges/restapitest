@@ -1,18 +1,20 @@
 from typing import TYPE_CHECKING
 
 from app.domain.building import Building, BuildingRepository, BuildingStatus
-from app.factory.repository import (get_building_repository)
+from app.factory.repository import get_building_repository
 from app.service.building.mapper import map_building_list_to_dto, map_building_to_dto
 from app.utils.exception_handler import AlreadyExistsError, NotFoundError
 
-
 if TYPE_CHECKING:
     import uuid
+
     from app.schema.building import (
         BuildingCreateRequest,
         BuildingDeleteRequest,
-        BuildingListResponse, BuildingResponse, BuildingUpdateRequest,
-)
+        BuildingListResponse,
+        BuildingResponse,
+        BuildingUpdateRequest,
+    )
 
 
 class BuildingService:
@@ -76,7 +78,6 @@ class BuildingService:
         building.status = BuildingStatus.SUSPENDED
 
         _ = self.building_repository.update(building)
-
 
     async def list_all(self) -> "BuildingListResponse":
         buildings = await self.building_repository.list_all()

@@ -5,26 +5,19 @@ from sqlalchemy import select
 from app.domain.base import BaseRepository
 from app.domain.building import Building
 
-
 if TYPE_CHECKING:
     import uuid
 
 
 class BuildingRepository(BaseRepository):
     async def get(self, id: "uuid.UUID") -> Building | None:
-        result = await self.session.execute(
-            select(Building).where(Building.id == id)
-        )
+        result = await self.session.execute(select(Building).where(Building.id == id))
         return result.scalar_one_or_none()
 
     async def get_by_addtess(self, address: str) -> Building | None:
-        result = await self.session.execute(
-            select(Building).where(Building.address == address)
-        )
+        result = await self.session.execute(select(Building).where(Building.address == address))
         return result.scalar_one_or_none()
 
     async def list_all(self) -> list[Building]:
-        result = await self.session.execute(
-            select(Building)
-        )
+        result = await self.session.execute(select(Building))
         return list(result.scalars().all())

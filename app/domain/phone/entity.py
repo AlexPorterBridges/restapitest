@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import ForeignKey, Text, UUID
+from sqlalchemy import UUID, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import TimestampMixin
@@ -15,9 +15,6 @@ class Phone(TimestampMixin):
         default=uuid.uuid4,
     )
 
-    organization_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("organizations.id")
-    )
+    organization_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("organizations.id"))
 
     number: Mapped[str] = mapped_column(Text, nullable=False)

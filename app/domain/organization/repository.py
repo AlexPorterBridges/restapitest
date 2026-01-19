@@ -8,7 +8,6 @@ from app.domain.base import BaseRepository
 from app.domain.building import Building
 from app.domain.organization import Organization, OrganizationStatus
 
-
 if TYPE_CHECKING:
     import uuid
 
@@ -16,12 +15,11 @@ if TYPE_CHECKING:
 class OrganizationRepository(BaseRepository):
     async def get(self, id: "uuid.UUID") -> Organization | None:
         result = await self.session.execute(
-            select(Organization).where(
-                and_(
-                    Organization.id == id,
-                    Organization.status != OrganizationStatus.SUSPENDED
-                ),
-            ).options(
+            select(Organization)
+            .where(
+                and_(Organization.id == id, Organization.status != OrganizationStatus.SUSPENDED),
+            )
+            .options(
                 selectinload(Organization.phones),
                 selectinload(Organization.activities),
                 selectinload(Organization.building),
@@ -45,14 +43,9 @@ class OrganizationRepository(BaseRepository):
         query = (
             select(Organization)
             .where(
-                and_(
-                    Organization.building_id == building_id,
-                    Organization.status != OrganizationStatus.SUSPENDED
-                ),
-            ).options(
-                selectinload(Organization.phones),
-                selectinload(Organization.activities)
+                and_(Organization.building_id == building_id, Organization.status != OrganizationStatus.SUSPENDED),
             )
+            .options(selectinload(Organization.phones), selectinload(Organization.activities))
         )
 
         result = await self.session.execute(query)
@@ -64,8 +57,7 @@ class OrganizationRepository(BaseRepository):
             .join(OrganizationActivity)
             .where(
                 and_(
-                    OrganizationActivity.activity_id == activity_id,
-                    Organization.status != OrganizationStatus.SUSPENDED
+                    OrganizationActivity.activity_id == activity_id, Organization.status != OrganizationStatus.SUSPENDED
                 ),
             )
             .options(
@@ -87,20 +79,14 @@ class OrganizationRepository(BaseRepository):
         lon2 = func.radians(Building.longitude)
 
         distance = earth_radius * func.acos(
-            func.cos(lat1)
-            * func.cos(lat2)
-            * func.cos(lon2 - lon1)
-            + func.sin(lat1) * func.sin(lat2)
+            func.cos(lat1) * func.cos(lat2) * func.cos(lon2 - lon1) + func.sin(lat1) * func.sin(lat2)
         )
 
         result = await self.session.execute(
             select(Organization)
             .join(Organization.building)
             .where(
-                and_(
-                    distance <= radius,
-                    Organization.status != OrganizationStatus.SUSPENDED
-                ),
+                and_(distance <= radius, Organization.status != OrganizationStatus.SUSPENDED),
             )
             .options(
                 selectinload(Organization.building),
@@ -113,16 +99,9 @@ class OrganizationRepository(BaseRepository):
     async def _get_activity_subtree_ids(self, root_activity_id: "uuid.UUID") -> list["uuid.UUID"]:
         activity_alias = aliased(Activity)
 
-        cte = (
-            select(Activity.id)
-            .where(Activity.id == root_activity_id)
-            .cte(name="activity_cte", recursive=True)
-        )
+        cte = select(Activity.id).where(Activity.id == root_activity_id).cte(name="activity_cte", recursive=True)
 
-        cte = cte.union_all(
-            select(activity_alias.id)
-            .where(activity_alias.parent_id == cte.c.id)
-        )
+        cte = cte.union_all(select(activity_alias.id).where(activity_alias.parent_id == cte.c.id))
 
         result = await self.session.execute(select(cte.c.id))
         return list(result.scalars().all())
@@ -136,7 +115,7 @@ class OrganizationRepository(BaseRepository):
             .where(
                 and_(
                     OrganizationActivity.activity_id.in_(activity_ids),
-                    Organization.status != OrganizationStatus.SUSPENDED
+                    Organization.status != OrganizationStatus.SUSPENDED,
                 ),
             )
             .distinct()
