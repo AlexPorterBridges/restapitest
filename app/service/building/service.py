@@ -68,7 +68,7 @@ class BuildingService:
     async def delete(
         self,
         data: "BuildingDeleteRequest",
-    ) -> "BuildingResponse":
+    ) -> None:
         building = await self.building_repository.get(data.id)
         if not building:
             raise NotFoundError("Building")
@@ -76,4 +76,3 @@ class BuildingService:
         building.status = BuildingStatus.SUSPENDED
 
         _ = self.building_repository.update(building)
-        return map_building_to_dto(building=building)

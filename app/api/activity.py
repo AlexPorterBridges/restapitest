@@ -26,7 +26,7 @@ router = APIRouter(
 async def get_activity(
     id: uuid.UUID,
     service: ActivityService = Depends(get_activity_service),
-):
+) -> ActivityResponse:
     return await service.get(id)
 
 
@@ -34,34 +34,35 @@ async def get_activity(
     "/create/",
     response_model=ActivityResponse,
     status_code=status.HTTP_201_CREATED,
-    summary="Создать организацию",
+    summary="Создать деятельность",
 )
 async def create_activity(
     data: ActivityCreateRequest,
     service: ActivityService = Depends(get_activity_service),
-):
+) -> ActivityResponse:
     return await service.create(data)
 
 
 @router.post(
     "/update/",
     response_model=ActivityResponse,
-    summary="Редактировать организацию",
+    summary="Редактировать деятельность",
 )
 async def update_activity(
     data: ActivityUpdateRequest,
     service: ActivityService = Depends(get_activity_service),
-):
+) -> ActivityResponse:
     return await service.update(data)
 
 
 @router.post(
     "/delete/",
     response_model=ActivityResponse,
-    summary="Удалить организацию",
+    summary="Удалить деятельность",
 )
 async def delete_activity(
     data: ActivityDeleteRequest,
     service: ActivityService = Depends(get_activity_service),
-):
-    return await service.delete(data)
+) -> None:
+    await service.delete(data)
+    return

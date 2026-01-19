@@ -39,7 +39,7 @@ class OrganizationService:
         self.organization_repository = organization_repository
 
     async def get(self, id: "uuid.UUID") -> "OrganizationResponse":
-        organization = await self.organization_repository.get_detail(id)
+        organization = await self.organization_repository.get(id)
 
         if not organization:
             raise NotFoundError("Organization")
@@ -118,10 +118,11 @@ class OrganizationService:
             name=data.name,
             building_id=data.building_id,
         )
-        organization.phones = [Phone(number=p) for p in data.phone_numbers],
-        organization.activities = activities,
+        organization.phones = [Phone(number=p) for p in data.phone_numbers]
+        organization.activities = activities
 
         _ = await self.organization_repository.create(organization)
+        organization = await self.organization_repository.get(organization.id)
         return map_organization_to_dto(organization=organization)
 
     async def update(self, data: "OrganizationUpdateRequest") -> "OrganizationResponse":
@@ -155,17 +156,17 @@ class OrganizationService:
             organization.activities.extend(activities)
 
         _ = await self.organization_repository.update(organization)
+        organization = await self.organization_repository.get(organization.id)
         return map_organization_to_dto(organization=organization)
 
     async def delete(
         self,
         data: "OrganizationDeleteRequest",
-    ) -> "OrganizationResponse":
+    ) -> None:
         organization = await self.organization_repository.get(data.id)
         if not organization:
             raise NotFoundError("Organization")
 
         organization.status = OrganizationStatus.SUSPENDED
 
-        _ = self.organization_repository.update(organization)
-        return map_organization_to_dto(organization=organization)
+        _ = await self.organization_repository.update(organization)

@@ -14,4 +14,5 @@ def map_activity_to_dto(activity: "Activity") -> ActivityResponse:
         id=activity.id,
         name=activity.name,
         level=activity.level,
+        parent_id=activity.parent_id,
     )

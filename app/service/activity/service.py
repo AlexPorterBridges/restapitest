@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from app.domain.activity import Activity, ActivityRepository, ActivityStatus
 from app.factory.repository import (get_activity_repository)
 from app.service.activity.mapper import map_activity_to_dto
-from app.utils.exception_handler import NotFoundError
+from app.utils.exception_handler import NotFoundError, UnprocessableEntityError
 
 
 if TYPE_CHECKING:
@@ -31,15 +31,21 @@ class ActivityService:
         return map_activity_to_dto(activity=activity)
 
     async def create(self, data: "ActivityCreateRequest") -> "ActivityResponse":
-        building = await self.activity_repository.get(data.parent_id)
-        if not building:
-            raise NotFoundError("Activity")
-
         activity = Activity(
             name=data.name,
-            parent_id=data.parent_id,
-            level=data.level,
         )
+
+        if data.parent_id:
+            parent = await self.activity_repository.get(data.parent_id)
+            if not parent:
+                raise NotFoundError("Parent activity")
+
+            activity.parent_id = data.parent_id
+            activity.parent = parent
+            activity.level = parent.level + 1
+            if activity.level > 3:
+                msg = "Inheritance from this parent is not possible, inheritance level exceeded"
+                raise UnprocessableEntityError(msg)
 
         _ = await self.activity_repository.create(activity)
         return map_activity_to_dto(activity=activity)
@@ -55,10 +61,10 @@ class ActivityService:
         if data.level is not None:
             activity.level = data.level
 
-        if data.paren_id is not None:
+        if data.parent_id is not None:
             parent = await self.activity_repository.get(data.parent_id)
             if not parent:
-                raise NotFoundError("Activity")
+                raise NotFoundError("Parent activity")
 
             activity.parent_id = data.parent_id
 
@@ -68,7 +74,7 @@ class ActivityService:
     async def delete(
         self,
         data: "ActivityDeleteRequest",
-    ) -> "ActivityResponse":
+    ) -> None:
         activity = await self.activity_repository.get(data.id)
         if not activity:
             raise NotFoundError("Activity")
@@ -76,4 +82,3 @@ class ActivityService:
         activity.status = ActivityStatus.SUSPENDED
 
         _ = self.activity_repository.update(activity)
-        return map_activity_to_dto(activity=activity)

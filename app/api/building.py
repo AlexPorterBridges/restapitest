@@ -26,7 +26,7 @@ router = APIRouter(
 async def get_building(
     id: uuid.UUID,
     service: BuildingService = Depends(get_building_service),
-):
+) -> BuildingResponse:
     return await service.get(id)
 
 
@@ -34,34 +34,35 @@ async def get_building(
     "/create/",
     response_model=BuildingResponse,
     status_code=status.HTTP_201_CREATED,
-    summary="Создать организацию",
+    summary="Создать здание",
 )
 async def create_building(
     data: BuildingCreateRequest,
     service: BuildingService = Depends(get_building_service),
-):
+) -> BuildingResponse:
     return await service.create(data)
 
 
 @router.post(
     "/update/",
     response_model=BuildingResponse,
-    summary="Редактировать организацию",
+    summary="Редактировать здание",
 )
 async def update_building(
     data: BuildingUpdateRequest,
     service: BuildingService = Depends(get_building_service),
-):
+) -> BuildingResponse:
     return await service.update(data)
 
 
 @router.post(
     "/delete/",
     response_model=BuildingResponse,
-    summary="Удалить организацию",
+    summary="Удалить здание",
 )
 async def delete_building(
     data: BuildingDeleteRequest,
     service: BuildingService = Depends(get_building_service),
-):
-    return await service.delete(data)
+) -> None:
+    await service.delete(data)
+    return

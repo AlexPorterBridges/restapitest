@@ -3,23 +3,13 @@ from typing import Annotated
 
 from pydantic import BaseModel, PositiveInt, StringConstraints
 
+from app.schema.activity import ActivityResponse
 from app.schema.base import BaseResponse
-
-
-class BuildingResponse(BaseResponse):
-    address: str
-    latitude: float
-    longitude: float
+from app.schema.building import BuildingResponse
 
 
 class PhoneResponse(BaseResponse):
     number: str
-
-
-class ActivityResponse(BaseResponse):
-    name: str
-    level: int
-    parent_id: uuid.UUID | None = None
 
 
 class OrganizationResponse(BaseResponse):

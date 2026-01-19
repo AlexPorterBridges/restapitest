@@ -28,7 +28,7 @@ class Building(TimestampMixin):
         nullable=False,
     )
 
-    organizations = relationship("Organization", back_populates="buildings")
+    organizations = relationship("Organization", back_populates="building")
 
     status: Mapped[BuildingStatus] = mapped_column(
         Enum(BuildingStatus, name="business_status"),

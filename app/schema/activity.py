@@ -14,14 +14,12 @@ class ActivityResponse(BaseResponse):
 
 class ActivityCreateRequest(BaseModel):
     name: str
-    level: int
     parent_id: uuid.UUID | None = None
 
 
 class ActivityUpdateRequest(BaseModel):
     id: uuid.UUID
     name: str
-    level: int
     parent_id: uuid.UUID | None = None
 
 

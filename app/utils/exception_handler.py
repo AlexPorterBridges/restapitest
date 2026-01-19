@@ -26,6 +26,13 @@ class NotFoundError(HTTPError):
         self.detail = f"{name} not found"
 
 
+class UnprocessableEntityError(HTTPError):
+    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    def __init__(self, text: str = "unprocessable entity"):
+        self.detail = f"Unprocessable request: {text}."
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(HTTPError)
     async def http_error_handler(

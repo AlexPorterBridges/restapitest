@@ -31,7 +31,7 @@ router = APIRouter(
 async def list_by_building(
     data: OrganizationByBuildingRequest,
     service: OrganizationService = Depends(get_organization_service),
-):
+) -> OrganizationListResponse:
     return await service.list_by_building(data)
 
 
@@ -43,7 +43,7 @@ async def list_by_building(
 async def list_by_activity(
     data: OrganizationByActivityRequest,
     service: OrganizationService = Depends(get_organization_service),
-):
+) -> OrganizationListResponse:
     return await service.list_by_activity(data)
 
 
@@ -55,7 +55,7 @@ async def list_by_activity(
 async def list_in_radius(
     data: OrganizationRadiusRequest,
     service: OrganizationService = Depends(get_organization_service),
-):
+) -> OrganizationListResponse:
     return await service.list_in_radius(data)
 
 
@@ -67,7 +67,7 @@ async def list_in_radius(
 async def get_organization(
     id: uuid.UUID,
     service: OrganizationService = Depends(get_organization_service),
-):
+) -> OrganizationResponse:
     return await service.get(id)
 
 
@@ -79,7 +79,7 @@ async def get_organization(
 async def list_by_activity_tree(
     data: OrganizationByActivityRequest,
     service: OrganizationService = Depends(get_organization_service),
-):
+) -> OrganizationListResponse:
     return await service.list_by_activity_tree(data)
 
 
@@ -91,7 +91,7 @@ async def list_by_activity_tree(
 async def search_by_name(
     data: OrganizationSearchByNameRequest,
     service: OrganizationService = Depends(get_organization_service),
-):
+) -> OrganizationListResponse:
     return await service.list_by_name(data)
 
 
@@ -104,7 +104,7 @@ async def search_by_name(
 async def create_organization(
     data: OrganizationCreateRequest,
     service: OrganizationService = Depends(get_organization_service),
-):
+) -> OrganizationResponse:
     return await service.create(data)
 
 
@@ -116,17 +116,18 @@ async def create_organization(
 async def update_organization(
     data: OrganizationUpdateRequest,
     service: OrganizationService = Depends(get_organization_service),
-):
+) -> OrganizationResponse:
     return await service.update(data)
 
 
 @router.post(
     "/delete/",
-    response_model=OrganizationResponse,
+    status_code=status.HTTP_204_NO_CONTENT,
     summary="Удалить организацию",
 )
 async def delete_organization(
     data: OrganizationDeleteRequest,
     service: OrganizationService = Depends(get_organization_service),
-):
-    return await service.delete(data)
+) -> None:
+    await service.delete(data)
+    return

@@ -21,7 +21,7 @@ class Activity(TimestampMixin):
     parent_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("activities.id"),
-        nullable=False,
+        nullable=True,
     )
 
     parent = relationship(
@@ -30,13 +30,19 @@ class Activity(TimestampMixin):
         back_populates="children",
     )
 
+    children: Mapped[list["Activity"]] = relationship(
+        argument="Activity",
+        back_populates="parent",
+        cascade="all, delete-orphan",
+    )
+
     organizations = relationship(
         argument="Organization",
-        secondary="activity_organizations",
+        secondary="organization_activities",
         back_populates="activities",
     )
 
-    level: Mapped[int] = mapped_column(SmallInteger, nullable=False)
+    level: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=1)
 
     status: Mapped[ActivityStatus] = mapped_column(
         Enum(ActivityStatus, name="business_status"),

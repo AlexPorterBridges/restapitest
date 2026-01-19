@@ -21,23 +21,13 @@ class OrganizationRepository(BaseRepository):
                     Organization.id == id,
                     Organization.status != OrganizationStatus.SUSPENDED
                 ),
+            ).options(
+                selectinload(Organization.phones),
+                selectinload(Organization.activities),
+                selectinload(Organization.building),
             )
         )
         return result.scalar_one_or_none()
-
-    async def get_detail(self, id: "uuid.UUID") -> Organization | None:
-        stmt = (
-            select(Organization)
-            .where(Organization.id == id)
-            .options(
-                selectinload(Organization.building),
-                selectinload(Organization.phones),
-                selectinload(Organization.activities),
-            )
-        )
-
-        result = await self.session.execute(stmt)
-        return result.scalars().one_or_none()
 
     async def list_by_name(self, name: str) -> list[Organization]:
         stmt = (
@@ -81,6 +71,7 @@ class OrganizationRepository(BaseRepository):
                 ),
             )
             .options(
+                selectinload(Organization.phones),
                 selectinload(Organization.building),
                 selectinload(Organization.activities),
             )
@@ -113,7 +104,11 @@ class OrganizationRepository(BaseRepository):
                     Organization.status != OrganizationStatus.SUSPENDED
                 ),
             )
-            .options(selectinload(Organization.building))
+            .options(
+                selectinload(Organization.building),
+                selectinload(Organization.phones),
+                selectinload(Organization.activities),
+            )
         )
 
         result = await self.session.execute(stmt)
@@ -152,6 +147,7 @@ class OrganizationRepository(BaseRepository):
             .options(
                 selectinload(Organization.activities),
                 selectinload(Organization.building),
+                selectinload(Organization.phones),
             )
         )
 

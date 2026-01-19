@@ -19,7 +19,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, Any]:  # noqa
         await drop_database()  # for early dev purposes only
 
 
-app = FastAPI(lifespan=lifespan, title="MedianBonus")
+app = FastAPI(lifespan=lifespan, title="RestAPI Test Task")
 register_exception_handlers(app)
 
 routers = [activity_router, building_router, organizations_router]
