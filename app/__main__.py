@@ -6,20 +6,17 @@ import uvicorn
 from fastapi import FastAPI
 
 from app.api import activity_router, building_router, organizations_router
-from app.database.bootstrap import drop_database, init_database
 from app.settings import app_settings
 from app.utils.exception_handler import register_exception_handlers
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, Any]:  # noqa
-    await init_database()
-    yield
-    if app_settings.env == "dev":
-        await drop_database()  # for early dev purposes only
+# @asynccontextmanager
+# async def lifespan(app: FastAPI) -> AsyncGenerator[None, Any]:  # noqa
+#     await run_migrations()
+#     yield
 
 
-app = FastAPI(lifespan=lifespan, title="RestAPI Test Task")
+app = FastAPI(title="RestAPI Test Task")
 register_exception_handlers(app)
 
 routers = [activity_router, building_router, organizations_router]

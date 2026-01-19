@@ -59,18 +59,6 @@ async def list_in_radius(
     return await service.list_in_radius(data)
 
 
-@router.get(
-    "/{id}",
-    response_model=OrganizationResponse,
-    summary="Получить организацию по ID",
-)
-async def get_organization(
-    id: uuid.UUID,
-    service: OrganizationService = Depends(get_organization_service),
-) -> OrganizationResponse:
-    return await service.get(id)
-
-
 @router.post(
     "/by-activity-tree/",
     response_model=OrganizationListResponse,
@@ -93,6 +81,18 @@ async def search_by_name(
     service: OrganizationService = Depends(get_organization_service),
 ) -> OrganizationListResponse:
     return await service.list_by_name(data)
+
+
+@router.get(
+    "/{id}",
+    response_model=OrganizationResponse,
+    summary="Получить организацию по ID",
+)
+async def get_organization(
+    id: uuid.UUID,
+    service: OrganizationService = Depends(get_organization_service),
+) -> OrganizationResponse:
+    return await service.get(id)
 
 
 @router.post(
