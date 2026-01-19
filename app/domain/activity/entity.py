@@ -1,0 +1,52 @@
+import uuid
+
+from sqlalchemy import ForeignKey, Text, UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.database.base import TimestampMixin
+
+
+class Activity(TimestampMixin):
+    __tablename__ = "activities"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+
+    parent_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("activities.id"),
+        nullable=False,
+    )
+
+    parent = relationship(
+        argument="Activity",
+        remote_side=[id],
+        back_populates="children",
+    )
+
+    organizations = relationship(
+        argument="Organization",
+        secondary="activity_organizations",
+        back_populates="activities",
+    )
+
+
+class OrganizationActivity(TimestampMixin):
+    __tablename__ = "organization_activities"
+
+    organization_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("organizations.id"),
+        primary_key=True,
+    )
+
+    activity_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("activities.id"),
+        primary_key=True,
+    )
